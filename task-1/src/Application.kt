@@ -9,7 +9,7 @@ class Application {
     internal var a = 1
     internal var b = 10
     internal var e = 10e-6
-    internal var V = 6.0
+    internal var V = 6
 
     fun start() {
         for (i in a..b) {
@@ -24,10 +24,6 @@ class Application {
     }
 
     fun f(previous: Double, count: Int, x: Int): Double {
-        var ans = previous
-        ans *= V * x.toDouble() * x.toDouble() * V
-        ans *= -1.0
-        ans /= ((count - 1) * count).toDouble()
-        return ans
+        return previous * -1.0 * V * V * x * x / ((count - 1) * count)
     }
 }

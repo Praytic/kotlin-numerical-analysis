@@ -1,16 +1,16 @@
 class Task1 (val a: Int, val b: Int, val e: Double, val V: Int,
-             val result: MutableMap<Int, Pair<Double, Int>> = mutableMapOf()) : Runnable {
+             val result: MutableMap<Double, Double> = mutableMapOf()) : Runnable {
 
     override fun run() {
-        for (i in a..b) {
+        for (i in a..b step 1) {
             var count = 1
             var res = 1.0
             while (Math.abs(f(res, count * 2, i)) > e) {
                 res += f(res, count * 2, i)
                 count++
             }
-            println("$res: $count")
-            result.put(i, Pair(res, count));
+//            println("f($i) = $res: $count")
+            result.put(i.toDouble(), res);
         }
     }
 

@@ -2,7 +2,6 @@ class Task2 (val inputData: MutableMap<Double, Double> = mutableMapOf(),
              val result: MutableMap<Double, Double> = sortedMapOf()) : Runnable {
 
     override fun run() {
-        result.putAll(inputData)
         val iterator = inputData.entries.iterator()
         var firstElement = iterator.next()
         while (iterator.hasNext()) {

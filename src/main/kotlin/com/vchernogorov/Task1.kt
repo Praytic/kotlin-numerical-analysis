@@ -1,7 +1,8 @@
 package com.vchernogorov
 
-class Task1 (val a: Int, val b: Int, val e: Double, val V: Int,
-             val result: MutableMap<Double, Double> = mutableMapOf()) : Runnable {
+class Task1(a: Int, b: Int, e: Double, V: Int, result: MutableMap<Double, Double> = mutableMapOf()) :
+        Task<MutableMap<Double, Double>>(a, b, e, V, result) {
+    constructor() : this(0, 0, 0.0, 0)
 
     override fun run() {
         for (i in a..b step 1) {
@@ -11,7 +12,6 @@ class Task1 (val a: Int, val b: Int, val e: Double, val V: Int,
                 res += f(res, count * 2, i)
                 count++
             }
-//            println("f($i) = $res: $count")
             result.put(i.toDouble(), res);
         }
     }

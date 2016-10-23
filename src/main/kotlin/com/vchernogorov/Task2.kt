@@ -1,10 +1,12 @@
 package com.vchernogorov
 
-class Task2 (val inputData: MutableMap<Double, Double> = mutableMapOf(),
-             val result: MutableMap<Double, Double> = sortedMapOf()) : Runnable {
+class Task2(a: Int, b: Int, e: Double, V: Int, result: MutableMap<Double, Double> = mutableMapOf(),
+            var task1: Task1 = { val task = Task1(a, b, e, V); task.run(); task }.invoke()) :
+        Task<MutableMap<Double, Double>>(a, b, e, V, result) {
+    constructor() : this(0, 0, 0.0, 0)
 
     override fun run() {
-        val iterator = inputData.entries.iterator()
+        val iterator = task1.result.entries.iterator()
         var firstElement = iterator.next()
         while (iterator.hasNext()) {
             val secondElement = iterator.next()

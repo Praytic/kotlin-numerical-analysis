@@ -11,7 +11,7 @@ class Task3Test {
         val task2Result = mutableMapOf(Pair(1.5, 2.25), Pair(2.5, 6.25))
         val task3 = Task3(task2Result)
         task3.run()
-        val actual = arrayOf(task3.result.values)
+        val actual = task3.result.values.toTypedArray()
         val expected = arrayOf(2.25, 6.25)
         Assertions.assertArrayEquals(expected, actual)
     }

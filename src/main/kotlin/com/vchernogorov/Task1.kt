@@ -1,3 +1,5 @@
+package com.vchernogorov
+
 class Task1 (val a: Int, val b: Int, val e: Double, val V: Int,
              val result: MutableMap<Double, Double> = mutableMapOf()) : Runnable {
 

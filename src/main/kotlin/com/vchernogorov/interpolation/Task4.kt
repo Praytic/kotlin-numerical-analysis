@@ -1,4 +1,7 @@
-package com.vchernogorov
+package com.vchernogorov.interpolation
+
+import com.vchernogorov.interpolation.Task
+import com.vchernogorov.interpolation.Task2
 
 class Task4 (val x: Double, a: Int, b: Int, e: Double, V: Int, result: Double = 0.0,
              var task2: Task2 = { val task = Task2(a, b, e, V); task.run(); task }.invoke()) :

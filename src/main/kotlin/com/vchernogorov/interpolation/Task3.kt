@@ -1,4 +1,4 @@
-package com.vchernogorov
+package com.vchernogorov.interpolation
 
 class Task3 (a: Int, b: Int, e: Double, V: Int, result: MutableMap<Double, Double> = mutableMapOf(),
              var task2: Task2 = { val task = Task2(a, b, e, V); task.run(); task }.invoke()) :

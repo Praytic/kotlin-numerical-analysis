@@ -1,6 +1,6 @@
 package com.vchergnogorov
 
-import com.vchernogorov.Task3
+import com.vchernogorov.interpolation.Task3
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

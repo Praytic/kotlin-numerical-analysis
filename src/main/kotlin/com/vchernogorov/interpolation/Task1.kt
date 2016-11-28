@@ -1,4 +1,4 @@
-package com.vchernogorov
+package com.vchernogorov.interpolation
 
 class Task1(a: Int, b: Int, e: Double, V: Int, result: MutableMap<Double, Double> = mutableMapOf()) :
         Task<MutableMap<Double, Double>>(a, b, e, V, result) {

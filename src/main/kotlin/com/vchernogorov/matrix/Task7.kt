@@ -1,17 +1,16 @@
 package com.vchernogorov.matrix
 
+import com.vchernogorov.Task
 import java.io.BufferedReader
 import java.io.FileReader
 import java.io.IOException
 import java.util.*
 
-class Task7 : Task<DoubleArray>(doubleArrayOf()) {
+class Task7 (val matrix: DoubleMatrix, val vector: DoubleArray) : Task<DoubleArray>(doubleArrayOf()) {
+
+    val E = 0.000001
 
     override fun run() {
-        val matrix = readMatrixFromFile("D:\\Java\\iteration method\\src\\com\\company\\matrix.txt")
-        val vector = readVectorFromFile("D:\\Java\\iteration method\\src\\com\\company\\vector.txt")
-
-        val E = 0.000001
 
         println("Считанная матрица с вектором:")
         printMatrixWithVector(matrix, vector)

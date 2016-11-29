@@ -1,11 +1,13 @@
 package com.vchergnogorov
 
 import com.vchernogorov.matrix.DoubleMatrix
-import com.vchernogorov.matrix.Task6
+import com.vchernogorov.matrix.Task7
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
-class Task6Test {
+@Disabled
+class Task7Test {
 
     @Test
     fun test() {
@@ -14,7 +16,7 @@ class Task6Test {
                 doubleArrayOf(2.0, 2.0, 5.0),
                 doubleArrayOf(0.0, 8.0, 1.0)))
         val vector = doubleArrayOf(7.0, 9.0, 9.0)
-        val task = Task6(matrix, vector)
+        val task = Task7(matrix, vector)
         task.run()
         val expected = doubleArrayOf(1.0, 1.0, 1.0)
         val actual = task.result.map { (if (it + 1e-9 > Math.round(it) && it < Math.round(it) ||

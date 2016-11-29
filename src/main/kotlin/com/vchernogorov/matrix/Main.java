@@ -4,106 +4,124 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
+        double[][] matrix = new double[][] { { 3, 2, 0 }, { 4, 2, 8 }, { 0, 5, 1 } };
+        double[] vector = new double[] { 7, 9, 9 };
+        final double E = 0.000001;
 
-        double[][] matrix = new double[][] { { 10, 1, 0 }, { 1, 20, 2 }, { 0, 3, 30 } };
-        double[] vector = new double[] { 11, 23, 33 };
-        double[] answer = new double[vector.length];
-
-        System.out.println("  Initial matrix");
+        System.out.println("Считанная матрица с вектором:");
         printMatrixWithVector(matrix, vector);
 
-        goForwardStroke(matrix, vector);
+        double[][] alphaMatrix = fillAlphaMatrix(matrix);
 
-        System.out.println("  Matrix after forward stroke");
-        printMatrixWithVector(matrix, vector);
+        double[] denominatorArray = fillDenominatorArray(matrix);
+        double[] betaVector = fillBetaVector(vector, denominatorArray);
 
-        goReverseMotion(matrix, vector, answer);
+        System.out.println("Новая считанная матрица с вектором:");
+        printMatrixWithVector(alphaMatrix, betaVector);
 
-        System.out.print("  Answer is ");
-        printLine(answer);
+        Double[] answer = iteration(alphaMatrix, betaVector, E);
+        System.out.println("\nФинальный ответ");
+        printVector(answer);
     }
 
-    public static void goForwardStroke(double[][] matrix, double[] vector) {
-        int countZero = 0;
-        List<Integer> numbers = new ArrayList<>();
+    public static Double[] iteration(double[][] matrix, double[] vector, double e) {
+        List<Double[]> xElements = new ArrayList<>();
+        Double[] steepVector = new Double[vector.length];
+
+        for (int i = 0; i < vector.length; i++) {
+            steepVector[i] = vector[i];
+        }
+        int count = 0;
+
+        xElements.add(steepVector);
+
+        printVector(xElements.get(xElements.size() - 1), ++count);
+
+        steepVector = multiplyMatrixWithVector(matrix, xElements.get(xElements.size() - 1));
+        steepVector = addVectors(steepVector, vector);
+        xElements.add(steepVector);
+
+        printVector(xElements.get(xElements.size() - 1), ++count);
+
+        while (vectorsNorm(xElements.get(xElements.size() - 2), xElements.get(xElements.size() - 1)) > e) {
+            steepVector = multiplyMatrixWithVector(matrix, xElements.get(xElements.size() - 1));
+            steepVector = addVectors(steepVector, vector);
+            xElements.add(steepVector);
+            printVector(xElements.get(xElements.size() - 1), ++count);
+        }
+
+        return xElements.get(xElements.size() - 1);
+    }
+
+    public static double[][] fillAlphaMatrix(double[][] matrix) {
+        double[][] alphaMatrix = new double[matrix.length][matrix.length];
         for (int i = 0; i < matrix.length; i++) {
-            int count = 1;
-            while (matrix[i][i] == 0) {
-                if (count >= matrix.length) {
-                    break;
-                }
-                countZero++;
-                numbers.add(i);
-                swapLines(matrix, vector, i, i + count++);
-            }
-            vector[i] /= matrix[i][i];
-
-            if (matrix[i][i] != 1) {
-                divideAtElement(matrix[i], matrix[i][i]);
-            }
-
-            for (int j = i + 1; j < matrix.length; j++) {
-                double subtract = matrix[j][i] / matrix[i][i];
-                if (matrix[i][j] - subtract != matrix[i][j]) {
-                    subtractLines(matrix[i], matrix[j], subtract);
-                    vector[j] -= vector[i] * subtract;
+            for (int j = 0; j < matrix.length; j++) {
+                if (i == j) {
+                    alphaMatrix[i][j] = 0;
+                } else {
+                    alphaMatrix[i][j] = -matrix[i][j] / matrix[i][i];
                 }
             }
         }
-        System.out.println("  Количество нулей на главной диагонали - " + countZero + "\n  Нули встретились на ");
-        for (int i = 0; i < numbers.size(); i++) {
-            System.out.println("      номере диагонали [" + (numbers.get(i) + 1) + ", " + (numbers.get(i) + 1) + "]");
-        }
-        System.out.println();
+
+        return alphaMatrix;
     }
 
-    public static void divideAtElement(double[] line, double value) {
-        for (int i = 0; i < line.length; i++) {
-            line[i] /= value;
-        }
-    }
-
-    public static void subtractLines(double[] firstLine, double[] secondLine, double substractElem) {
-        for (int i = 0; i < firstLine.length; i++) {
-            secondLine[i] -= firstLine[i] * substractElem;
-        }
-    }
-
-    public static void swapLines(double[][] matrix, double[] vector, int indexLine, int indexToSwapLine) {
-        double[] tempLine = matrix[indexLine];
-        double tempVector = vector[indexLine];
-
-        double element = matrix[indexLine][indexLine];
-        int swapIndex = indexToSwapLine;
-        while (indexToSwapLine < vector.length) {
-            if (element < Math.abs(matrix[indexLine][indexToSwapLine])) {
-                element = Math.abs(matrix[indexLine][indexToSwapLine]);
-                swapIndex = indexToSwapLine;
-            }
-            indexToSwapLine++;
-        }
-
-        matrix[indexLine] = matrix[swapIndex];
-        vector[indexLine] = vector[swapIndex];
-
-        matrix[swapIndex] = tempLine;
-        vector[swapIndex] = tempVector;
-    }
-
-    public static void goReverseMotion(double[][] matrix, double[] vector, double[] answer) {
+    public static double[] fillDenominatorArray(double[][] matrix) {
+        double[] denominatorArray = new double[matrix.length];
         for (int i = 0; i < matrix.length; i++) {
-            int index = matrix.length - 1 - i;
-            answer[index] = vector[index];
+            denominatorArray[i] = matrix[i][i];
+        }
+        return denominatorArray;
+    }
 
-            for (int j = index + 1; j < matrix.length; j++) {
-                answer[index] -= answer[j] * matrix[index][j];
+    public static double[] fillBetaVector(double[] vector, double[] denominatorArray) {
+        double[] betaVector = new double[vector.length];
+        for (int i = 0; i < vector.length; i++) {
+            betaVector[i] = vector[i] / denominatorArray[i];
+        }
+        return betaVector;
+    }
+
+    public static Double[] multiplyMatrixWithVector(double[][] matrix, Double[] vector) {
+        Double[] resultVector = new Double[vector.length];
+        Arrays.fill(resultVector, 0.0);
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < vector.length; j++) {
+                resultVector[i] += matrix[i][j] * vector[j];
             }
         }
+
+        return resultVector;
+    }
+
+    public static Double[] addVectors(Double[] firstVector, double[] secondVector) {
+        Double[] resultVector = new Double[firstVector.length];
+
+        for (int i = 0; i < resultVector.length; i++) {
+            resultVector[i] = firstVector[i] + secondVector[i];
+        }
+
+        return resultVector;
+    }
+
+    public static double vectorsNorm(Double[] firstVector, Double[] secondVector) {
+        double maxNorm = -1;
+
+        for (int i = 0; i < firstVector.length; i++) {
+            if (Math.abs(secondVector[i] - firstVector[i]) > maxNorm) {
+                maxNorm = Math.abs(secondVector[i] - firstVector[i]);
+            }
+        }
+
+        return maxNorm;
     }
 
     public static double[][] readMatrixFromFile(String path) {
@@ -158,7 +176,15 @@ public class Main {
         System.out.println();
     }
 
-    public static void printLine(double[] line) {
+    public static void printVector(Double[] line, int count) {
+        for (int i = 0; i < line.length; i++) {
+            System.out.print(String.format("%(.4f\t", line[i]));
+        }
+
+        System.out.println(" шаг №" + count);
+    }
+
+    public static void printVector(Double[] line) {
         for (int i = 0; i < line.length; i++) {
             System.out.print(String.format("%(.4f\t", line[i]));
         }

@@ -1,13 +1,11 @@
 package com.vchernogorov.matrix
 
-import java.util.*
+import com.vchernogorov.Task
 
 // Gaussian elimination
 class Task5 (val A: DoubleMatrix, val B: DoubleArray) : Task<DoubleArray>(DoubleArray(B.size)) {
 
     val size = A.rows.size
-    val P = DoubleArray(size + 1)
-    val Q = DoubleArray(size + 1)
 
     override fun run() {
         echelonForm()
@@ -15,17 +13,12 @@ class Task5 (val A: DoubleMatrix, val B: DoubleArray) : Task<DoubleArray>(Double
     }
 
     fun echelonForm() {
-        var countZero = 0
-        val numbers = ArrayList<Int>()
         for (i in A.rows.indices) {
-            var count = 1
             while (A[i][i] == 0.0) {
-                if (count >= A.rows.size) {
+                if (i + 1 >= size) {
                     break
                 }
-                countZero++
-                numbers.add(i)
-                A.swapRows(B, i, i + count++)
+                A.swapRows(B, i, i + 1)
             }
             B[i] /= A[i][i]
 
@@ -36,7 +29,7 @@ class Task5 (val A: DoubleMatrix, val B: DoubleArray) : Task<DoubleArray>(Double
                 }
             }
 
-            for (j in i + 1..A.rows.size - 1) {
+            for (j in i + 1..size - 1) {
                 val subtract = A[j][i] / A[i][i]
                 if (A[i][j] - subtract != A[i][j]) {
                     for (k in A[i].indices) {
@@ -50,10 +43,10 @@ class Task5 (val A: DoubleMatrix, val B: DoubleArray) : Task<DoubleArray>(Double
 
     fun inverseEchelonForm() {
         for (i in A.rows.indices) {
-            val index = A.rows.size - 1 - i
+            val index = size - 1 - i
             result[index] = B[index]
 
-            for (j in index + 1..A.rows.size - 1) {
+            for (j in index + 1..size - 1) {
                 result[index] -= result[j] * A[index][j]
             }
         }
